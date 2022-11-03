@@ -17,12 +17,16 @@ export function NutraSelecScreen() {
                     What do you want to have today ?
                 </Heading>
             </Center>
-            <ScrollView h="80">
+            <ScrollView h="80" showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+
+            >
 
 
                 <HStack w="100%" space={3} justifyContent="center">
 
                     <FlatGrid
+                        maxItemsPerRow={2}
                         itemDimension={130}
                         data={nutrients}
                         renderItem={({ item }) => (<Item>{item.name}</Item>)}

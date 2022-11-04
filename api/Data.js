@@ -1,146 +1,33 @@
+import axios from 'axios'
 
+class Database {
+    isLocal = false;
+    constructor(isLocal) {
+        this.isLocal = isLocal;
+    }
 
-const getNutrients = function () {
-
-    let db = "https://db4s.dbhub.io:5550/semibittechnologies/data.sqlite?commit=07a892593264c65cc9b20cf4498167d89be0895e7ad13e8992ebf24d9c1d2613&branch=master"
-
-    return [
-        {
-            "code": "ash",
-            "name": "Ash",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "vit",
-            "name": "Vitamin",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "enerc",
-            "name": "Energy",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
-        },
-        {
-            "code": "prot",
-            "name": "Protien",
-            "tags": "total metal oxide mineral inorganic element residue proximate",
-            "priority": 0
+    async query(sql) {
+        if (!this.isLocal) {
+            let result = await axios.post("https://nutrabits.herokuapp.com/public", {
+                "transaction": [
+                    {
+                        "query": sql
+                    }
+                ]
+            })
+            return result.data.results[0].resultSet
         }
-    ]
-}
+        return []
+    }
 
-const Data = {
-    getNutrients: getNutrients
+
+    async getNutrients(limit) {
+
+        let data = await this.query(`SELECT code,name,priority,tags FROM 'public.columns' where priority >= 0 ORDER BY priority desc LIMIT ${limit}`)
+        return data
+    }
+
+
+
 }
-export default Data
+export default Database

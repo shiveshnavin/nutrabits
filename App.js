@@ -6,6 +6,7 @@ import HomeScreen from './components/screens/HomeScreen'
 import { NutraSelecScreen } from './components/screens/NutraSelecScreen';
 import { AppContext, AppContextProvider } from "./components/AppContext";
 import { extendTheme, NativeBaseProvider } from 'native-base';
+import FindRecepiesScreen from './components/screens/FindRecepiesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -107,6 +108,7 @@ function App() {
             headerShown: false
           }}>
             <Stack.Screen name="nutraselec" component={NutraSelecScreen} />
+            <Stack.Screen name="foods" component={FindRecepiesScreen} />
             <Stack.Screen name="home" component={HomeScreen} />
           </Stack.Navigator>
         </NavigationContainer>

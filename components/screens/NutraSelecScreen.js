@@ -86,7 +86,6 @@ export function NutraSelecScreen(props) {
                     w="100%" InputLeftElement={<Icon as={<MaterialIcons name="search" />} size={5} ml="2" color="muted.400" />} placeholder="Search" />
             </Center>
             <HStack style={[{ flex: 4, flexDirection: 'column', }]}>
-
                 {
                     filterednutrients == undefined ?
                         (<VStack space={2} justifyContent="center">
@@ -119,8 +118,6 @@ export function NutraSelecScreen(props) {
                                     />
                                 </VStack>
                             )
-
-
                         )
                 }
             </HStack>
@@ -132,7 +129,7 @@ export function NutraSelecScreen(props) {
                 style={{ paddingLeft: 100, paddingRight: 100, justifyContent: 'flex-start' }}
                 onPress={() => {
                     props.navigation.navigate(
-                        'home',
+                        'foods',
                         {
                             nutrients: selectedNutrients
                         },

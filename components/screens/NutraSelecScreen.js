@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { VStack, Spinner, HStack, Text, Center, Heading, Button, ScrollView, Input, Icon } from 'native-base';
 import BaseScreen from './BaseScreen';
 import { FlatGrid } from 'react-native-super-grid';
@@ -6,12 +6,13 @@ import Database from '../../api/Data'
 import { Dimensions, Platform, SafeAreaView, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Br } from '../common/Br';
+import { Utils } from '../../utils/utils';
 
 
 export function NutraSelecScreen(props) {
-
     let db = new Database(Platform.OS != 'web');
     const [filterednutrients, setFilteredNutrients] = useState(undefined)
+    const [selectedNutrients, setselectedNutrients] = useState([])
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const [timeout, setCurTimeout] = useState(0)
     const setsearchTerm = function (term) {
@@ -25,21 +26,23 @@ export function NutraSelecScreen(props) {
     }
 
     React.useEffect(() => {
-        db.getNutrients(100).then((list) => {
+        db.getNutrients(20).then((list) => {
             setFilteredNutrients(list)
         });
     }, []);
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-
+    // width={windowWidth / 2.5}
     function Item(props) {
 
         const [, forceUpdate] = useReducer(x => x + 1, 0);
 
         let item = props.data;
         let name = item.name.length < 13 ? item.name : item.name.substr(0, 13).trim() + "...";
-        let isSelected = item.isSelected != undefined && item.isSelected == true;
+        let isSelected = selectedNutrients.filter(sel => {
+            return sel.code == item.code;
+        }).length > 0 //item.isSelected != undefined && item.isSelected == true;
 
         return (
             <Center>
@@ -47,9 +50,15 @@ export function NutraSelecScreen(props) {
                     height={9}
                     onPress={() => {
                         item.isSelected = !item.isSelected;
+                        Utils.removeByAttr(selectedNutrients, 'code', item.code)
+                        if (item.isSelected) {
+                            selectedNutrients.push(item)
+                        }
                         forceUpdate()
                     }}
-                    style={{ borderRadius: 10 }} width={windowWidth / 2.5} size="sm" variant={isSelected ? "solid" : "outline"}>
+                    style={{ borderRadius: 10 }}
+                    width={windowWidth / 2.5}
+                    size="sm" variant={isSelected ? "solid" : "outline"}>
                     {name}
                 </Button>
             </Center>
@@ -59,9 +68,9 @@ export function NutraSelecScreen(props) {
 
     return (
 
-        <BaseScreen style={{ flex: 1, flexDirection: 'row', flexDirection: "column" }}>
+        <BaseScreen style={{ flexDirection: 'column', alignContent: 'flex-start' }}>
 
-            <Center style={{ flex: 2 }} paddingLeft={5} paddingRight={5}>
+            <Center style={{ flex: 2, }} paddingLeft={5} paddingRight={5}>
                 <Heading size="md">
                     What do you want to have today ?
                 </Heading>
@@ -71,40 +80,49 @@ export function NutraSelecScreen(props) {
                     returnKeyType="search"
                     w="100%" InputLeftElement={<Icon as={<MaterialIcons name="search" />} size={5} ml="2" color="muted.400" />} placeholder="Search" />
             </Center>
-            <HStack style={{ flex: 5 }} space={3} justifyContent="center">
+            <HStack style={[{ flex: 4, flexDirection: 'column', }]}>
 
                 {
                     filterednutrients == undefined ?
-                        (<VStack space={2} height="100%" justifyContent="center">
+                        (<VStack space={2} justifyContent="center">
                             <Spinner accessibilityLabel="Loading" />
                             <Heading color="primary.500" fontSize="md">
                                 Loading
                             </Heading>
                         </VStack>)
                         :
-                        (<VStack justifyContent="center">
-                            <FlatGrid
-                                maxItemsPerRow={2}
-                                itemDimension={130}
-                                data={filterednutrients}
-                                renderItem={({ item }) => (<Item data={item} />)}
-                            />
-                        </VStack>)
+                        (
+                            Platform.OS == 'web' ? (
+                                <ScrollView style={{ height: '60%' }} >
+                                    <FlatGrid
+                                        maxItemsPerRow={2}
+                                        data={filterednutrients}
+                                        renderItem={({ item }) => (<Item data={item} />)}
+                                    />
+                                </ScrollView>
+                            ) : (
+                                <VStack >
+                                    <FlatGrid
+                                        maxItemsPerRow={2}
+                                        data={filterednutrients}
+                                        renderItem={({ item }) => (<Item data={item} />)}
+                                    />
+                                </VStack>
+                            )
+
+
+                        )
                 }
             </HStack>
 
-            <Center width="100%" paddingLeft="5" paddingRight={5}>
-
-                <Button height={10} size="sm" width="100%" colorScheme="secondary"
-
+            <Center style={{ flex: 1, }} >
+                <Button height={10} size="sm" colorScheme="secondary"
+                    style={{ paddingLeft: 50, paddingRight: 50 }}
                     onPress={() => {
                         props.navigation.navigate(
                             'home',
                             {
-                                nutrients: filterednutrients.filter((item) => {
-                                    let isSelected = item.isSelected != undefined && item.isSelected == true;
-                                    return isSelected;
-                                })
+                                nutrients: selectedNutrients
                             },
                         );
                     }}>

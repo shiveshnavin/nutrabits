@@ -69,18 +69,18 @@ export default function BaseScreen(props) {
     return (
         <NativeBaseProvider theme={theme}>
 
-            <SafeAreaView h="80" w="100%" style={{ flex: 1, backgroundColor: appConfig.theme == 'dark' ? '#18181b' : 'white', }} >
+            <SafeAreaView w="100%" style={{ flex: 1, backgroundColor: appConfig.theme == 'dark' ? '#18181b' : 'white', }} >
                 <VStack height="100%" width="100%" >
                     <Center
                         px={4}
-                        flex={1}
+                        flex={9}
                     >
                         <VStack space={5} alignItems="center">
                             {props.children}
                         </VStack>
 
                     </Center>
-                    <BottomBar theme={theme} />
+                    <BottomBar flex={1} theme={theme} />
                 </VStack>
             </SafeAreaView>
         </NativeBaseProvider>

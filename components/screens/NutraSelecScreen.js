@@ -75,7 +75,7 @@ export function NutraSelecScreen(props) {
 
         <BaseScreen style={{ flexDirection: 'column', alignContent: 'flex-start' }}>
 
-            <Center style={{ flex: 2, }} paddingLeft={5} paddingRight={5}>
+            <Center style={{ flex: 2, justifyContent: 'flex-end' }} paddingLeft={5} paddingRight={5}>
                 <Heading size="md" >
                     What do you want to have today ?
                 </Heading>
@@ -106,8 +106,13 @@ export function NutraSelecScreen(props) {
                                     />
                                 </ScrollView>
                             ) : (
-                                <VStack >
+                                <VStack
+                                    showsHorizontalScrollIndicator={false}
+
+                                >
                                     <FlatGrid
+                                        showsHorizontalScrollIndicator={false}
+                                        persistentScrollbar={false}
                                         maxItemsPerRow={2}
                                         data={filterednutrients}
                                         renderItem={({ item }) => (<Item data={item} />)}
@@ -120,21 +125,21 @@ export function NutraSelecScreen(props) {
                 }
             </HStack>
 
-            <Center style={{ flex: 1, }}   >
-                <Button info height={10} size="sm"
-                    colorScheme="primary"
-                    style={{ paddingLeft: 50, paddingRight: 50 }}
-                    onPress={() => {
-                        props.navigation.navigate(
-                            'home',
-                            {
-                                nutrients: selectedNutrients
-                            },
-                        );
-                    }}>
-                    NEXT
-                </Button>
-            </Center>
+            <Button
+                size="lg"
+                borderRadius="10"
+                colorScheme="primary"
+                style={{ paddingLeft: 100, paddingRight: 100, justifyContent: 'flex-start' }}
+                onPress={() => {
+                    props.navigation.navigate(
+                        'home',
+                        {
+                            nutrients: selectedNutrients
+                        },
+                    );
+                }}>
+                NEXT
+            </Button>
         </BaseScreen >
     );
 }

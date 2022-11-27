@@ -17,12 +17,12 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function BottomBar(props) {
-    const [selected, setSelected] = React.useState();
+    const [selected, setSelected] = React.useState(props.routeName);
     return (
         <Box bg={props.theme.colors.backgroundColor} safeAreaTop width="100%" alignSelf="center">
 
             <HStack bg={props.theme.colors.primary[700]} alignItems="center" safeAreaBottom shadow={6}>
-                <Pressable cursor="pointer" opacity={selected === 0 ? 1 : 0.5} py="3" flex={1} onPress={() => setSelected(0)}>
+                <Pressable cursor="pointer" opacity={selected === 'home' ? 1 : 0.5} py="3" flex={1} onPress={() => setSelected('home')}>
                     <Center>
                         <Icon mb="1" as={<MaterialCommunityIcons name={selected === 0 ? 'home' : 'home-outline'} />} color="white" size="sm" />
                         <Text color="white" fontSize="12">
@@ -61,6 +61,7 @@ function BottomBar(props) {
 export default function BaseScreen(props) {
     const appConfig = useContext(AppContext);
     const theme = useTheme()
+    let routeName = props.route ? props.route.name : 'home';
 
     return (
 
@@ -75,7 +76,7 @@ export default function BaseScreen(props) {
                     </VStack>
 
                 </Center>
-                <BottomBar flex={1} theme={theme} />
+                <BottomBar flex={1} theme={theme} routeName={routeName} />
             </VStack>
         </SafeAreaView>
 

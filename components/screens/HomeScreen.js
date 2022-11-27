@@ -18,7 +18,7 @@ export default function HomeScreen(props) {
     let selectedNutrients = props.route.params.nutrients;
     console.log(selectedNutrients)
     return (
-        <BaseScreen>
+        <BaseScreen {...props}>
             <VStack space={5} alignItems="center">
                 <Heading size="lg">Welcome to NativeBase</Heading>
                 <HStack space={2} alignItems="center">

@@ -8,7 +8,8 @@ import {
     Pressable,
     Icon,
     Box,
-    Text
+    Text,
+    useTheme
 } from "native-base";
 import { AppContext } from "../AppContext";
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -20,7 +21,7 @@ function BottomBar(props) {
     return (
         <Box bg={props.theme.colors.backgroundColor} safeAreaTop width="100%" alignSelf="center">
 
-            <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
+            <HStack bg={props.theme.colors.primary[700]} alignItems="center" safeAreaBottom shadow={6}>
                 <Pressable cursor="pointer" opacity={selected === 0 ? 1 : 0.5} py="3" flex={1} onPress={() => setSelected(0)}>
                     <Center>
                         <Icon mb="1" as={<MaterialCommunityIcons name={selected === 0 ? 'home' : 'home-outline'} />} color="white" size="sm" />
@@ -58,32 +59,25 @@ function BottomBar(props) {
     )
 }
 export default function BaseScreen(props) {
-
-    const [appConfig, setAppConfig] = useContext(AppContext);
-
-    const theme = extendTheme({
-        useSystemColorMode: false,
-        initialColorMode: appConfig.theme,
-    });
+    const appConfig = useContext(AppContext);
+    const theme = useTheme()
 
     return (
-        <NativeBaseProvider theme={theme}>
 
-            <SafeAreaView w="100%" style={{ flex: 1, backgroundColor: appConfig.theme == 'dark' ? '#18181b' : 'white', }} >
-                <VStack height="100%" width="100%" >
-                    <Center
-                        px={4}
-                        flex={9}
-                    >
-                        <VStack space={5} alignItems="center">
-                            {props.children}
-                        </VStack>
+        <SafeAreaView w="100%" style={{ flex: 1, backgroundColor: appConfig.theme == 'dark' ? '#18181b' : 'white', }} >
+            <VStack height="100%" width="100%" >
+                <Center
+                    px={4}
+                    flex={9}
+                >
+                    <VStack space={5} alignItems="center">
+                        {props.children}
+                    </VStack>
 
-                    </Center>
-                    <BottomBar flex={1} theme={theme} />
-                </VStack>
-            </SafeAreaView>
-        </NativeBaseProvider>
+                </Center>
+                <BottomBar flex={1} theme={theme} />
+            </VStack>
+        </SafeAreaView>
 
     );
 }

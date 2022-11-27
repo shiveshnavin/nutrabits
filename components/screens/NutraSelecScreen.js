@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { VStack, Spinner, HStack, Text, Center, Heading, Button, ScrollView, Input, Icon } from 'native-base';
+import { VStack, Spinner, HStack, Text, Center, Heading, Button, ScrollView, Input, Icon, useTheme } from 'native-base';
 import BaseScreen from './BaseScreen';
 import { FlatGrid } from 'react-native-super-grid';
 import Database from '../../api/Data'
@@ -10,6 +10,9 @@ import { Utils } from '../../utils/utils';
 
 
 export function NutraSelecScreen(props) {
+
+    const { colors } = useTheme();
+
     let db = new Database(Platform.OS != 'web');
     const [filterednutrients, setFilteredNutrients] = useState(undefined)
     const [selectedNutrients, setselectedNutrients] = useState([])
@@ -47,6 +50,7 @@ export function NutraSelecScreen(props) {
         return (
             <Center>
                 <Button
+                    colorScheme="secondary"
                     height={9}
                     onPress={() => {
                         item.isSelected = !item.isSelected;
@@ -58,7 +62,8 @@ export function NutraSelecScreen(props) {
                     }}
                     style={{ borderRadius: 10 }}
                     width={windowWidth / 2.5}
-                    size="sm" variant={isSelected ? "solid" : "outline"}>
+                    size="sm"
+                    variant={isSelected ? "solid" : "outline"}>
                     {name}
                 </Button>
             </Center>
@@ -71,7 +76,7 @@ export function NutraSelecScreen(props) {
         <BaseScreen style={{ flexDirection: 'column', alignContent: 'flex-start' }}>
 
             <Center style={{ flex: 2, }} paddingLeft={5} paddingRight={5}>
-                <Heading size="md">
+                <Heading size="md" >
                     What do you want to have today ?
                 </Heading>
                 <Br />
@@ -115,8 +120,9 @@ export function NutraSelecScreen(props) {
                 }
             </HStack>
 
-            <Center style={{ flex: 1, }} >
-                <Button height={10} size="sm" colorScheme="secondary"
+            <Center style={{ flex: 1, }}   >
+                <Button info height={10} size="sm"
+                    colorScheme="primary"
                     style={{ paddingLeft: 50, paddingRight: 50 }}
                     onPress={() => {
                         props.navigation.navigate(

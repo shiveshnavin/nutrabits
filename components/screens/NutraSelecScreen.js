@@ -3,7 +3,7 @@ import { VStack, Spinner, HStack, Text, Center, Heading, Button, ScrollView, Inp
 import BaseScreen from './BaseScreen';
 import { FlatGrid } from 'react-native-super-grid';
 import Database from '../../api/Data'
-import { Dimensions, Platform, View } from 'react-native';
+import { Dimensions, Platform, SafeAreaView, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Br } from '../common/Br';
 
@@ -24,15 +24,19 @@ export function NutraSelecScreen(props) {
 
     }
 
-    React.useEffect(async () => {
-        let list = await db.getNutrients(20);
-        setFilteredNutrients(list)
+    React.useEffect(() => {
+        db.getNutrients(100).then((list) => {
+            setFilteredNutrients(list)
+        });
     }, []);
+
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
 
     function Item(props) {
 
-        const windowWidth = Dimensions.get('window').width;
-        const windowHeight = Dimensions.get('window').height;
+        const [, forceUpdate] = useReducer(x => x + 1, 0);
+
         let item = props.data;
         let name = item.name.length < 13 ? item.name : item.name.substr(0, 13).trim() + "...";
         let isSelected = item.isSelected != undefined && item.isSelected == true;
@@ -55,9 +59,9 @@ export function NutraSelecScreen(props) {
 
     return (
 
-        <BaseScreen style={{ flex: 1, flexDirection: "column" }}>
+        <BaseScreen style={{ flex: 1, flexDirection: 'row', flexDirection: "column" }}>
 
-            <Center paddingLeft={5} paddingRight={5}>
+            <Center style={{ flex: 2 }} paddingLeft={5} paddingRight={5}>
                 <Heading size="md">
                     What do you want to have today ?
                 </Heading>
@@ -67,30 +71,27 @@ export function NutraSelecScreen(props) {
                     returnKeyType="search"
                     w="100%" InputLeftElement={<Icon as={<MaterialIcons name="search" />} size={5} ml="2" color="muted.400" />} placeholder="Search" />
             </Center>
-            <ScrollView h="80" w="100%" showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
+            <HStack style={{ flex: 5 }} space={3} justifyContent="center">
 
-            >
-                <HStack w="100%" space={3} justifyContent="center">
-
-                    {
-                        filterednutrients == undefined ?
-                            (<Center space={2} height="200" justifyContent="center">
-                                <Spinner accessibilityLabel="Loading" />
-                                <Heading color="primary.500" fontSize="md">
-                                    Loading
-                                </Heading>
-                            </Center>)
-                            :
-                            (<FlatGrid
+                {
+                    filterednutrients == undefined ?
+                        (<VStack space={2} height="100%" justifyContent="center">
+                            <Spinner accessibilityLabel="Loading" />
+                            <Heading color="primary.500" fontSize="md">
+                                Loading
+                            </Heading>
+                        </VStack>)
+                        :
+                        (<VStack justifyContent="center">
+                            <FlatGrid
                                 maxItemsPerRow={2}
                                 itemDimension={130}
                                 data={filterednutrients}
                                 renderItem={({ item }) => (<Item data={item} />)}
-                            />)
-                    }
-                </HStack>
-            </ScrollView>
+                            />
+                        </VStack>)
+                }
+            </HStack>
 
             <Center width="100%" paddingLeft="5" paddingRight={5}>
 

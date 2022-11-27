@@ -7,17 +7,14 @@ class Database {
     }
 
     async query(sql) {
-        if (!this.isLocal) {
-            let result = await axios.post("https://nutrabits.herokuapp.com/public", {
-                "transaction": [
-                    {
-                        "query": sql
-                    }
-                ]
-            })
-            return result.data.results[0].resultSet
-        }
-        return []
+        let result = await axios.post("https://nutrabits.herokuapp.com/public", {
+            "transaction": [
+                {
+                    "query": sql
+                }
+            ]
+        })
+        return result.data.results[0].resultSet
     }
 
 

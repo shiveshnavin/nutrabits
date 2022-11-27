@@ -4,7 +4,7 @@ export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
     const [config, setConfig] = useState({
-        theme: "dark"
+        theme: "light"
     })
     return (
         <AppContext.Provider value={[config, setConfig]}>

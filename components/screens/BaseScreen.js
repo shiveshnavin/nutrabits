@@ -13,11 +13,12 @@ import {
 import { AppContext } from "../AppContext";
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function BottomBar(props) {
     const [selected, setSelected] = React.useState();
     return (
-        <Box bg="white" safeAreaTop width="100%" alignSelf="center">
+        <Box bg={props.theme.colors.backgroundColor} safeAreaTop width="100%" alignSelf="center">
 
             <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
                 <Pressable cursor="pointer" opacity={selected === 0 ? 1 : 0.5} py="3" flex={1} onPress={() => setSelected(0)}>
@@ -68,21 +69,20 @@ export default function BaseScreen(props) {
     return (
         <NativeBaseProvider theme={theme}>
 
-            <VStack height="100%" width="100%" >
-                <Center
-                    _dark={{ bg: "blueGray.900" }}
-                    _light={{ bg: "blueGray.50" }}
-                    px={4}
-                    flex={1}
-                >
-                    <VStack space={5} alignItems="center">
-                        {props.children}
-                    </VStack>
+            <SafeAreaView h="80" w="100%" style={{ flex: 1, backgroundColor: appConfig.theme == 'dark' ? '#18181b' : 'white', }} >
+                <VStack height="100%" width="100%" >
+                    <Center
+                        px={4}
+                        flex={1}
+                    >
+                        <VStack space={5} alignItems="center">
+                            {props.children}
+                        </VStack>
 
-                </Center>
-                <BottomBar />
-            </VStack>
-
+                    </Center>
+                    <BottomBar theme={theme} />
+                </VStack>
+            </SafeAreaView>
         </NativeBaseProvider>
 
     );

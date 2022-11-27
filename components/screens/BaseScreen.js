@@ -15,7 +15,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { View } from "react-native";
 
 function BottomBar(props) {
-    const [selected, setSelected] = React.useState(1);
+    const [selected, setSelected] = React.useState();
     return (
         <Box bg="white" safeAreaTop width="100%" alignSelf="center">
 

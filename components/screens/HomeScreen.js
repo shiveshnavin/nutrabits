@@ -14,7 +14,9 @@ import {
 import BaseScreen from "./BaseScreen";
 import { AppContext } from "../AppContext";
 
-export default function App() {
+export default function HomeScreen(props) {
+    let selectedNutrients = props.route.params.nutrients;
+    console.log(selectedNutrients)
     return (
         <BaseScreen>
             <VStack space={5} alignItems="center">
